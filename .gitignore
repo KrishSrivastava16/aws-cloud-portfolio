@@ -1,9 +1,7 @@
-*.swp
-__pycache__
-.pytest_cache
-.venv
-*.egg-info
-
-# CDK asset staging directory
-.cdk.staging
-cdk.out
+.venv/
+__pycache__/
+*.pyc
+cdk.out/
+cdk.context.json
+.env
+node_modules/

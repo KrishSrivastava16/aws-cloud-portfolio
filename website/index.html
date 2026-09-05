@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Name — Cloud Infrastructure, Built and Documented</title>
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --panel: #0f1730;
+    --line: #1f2b4d;
+    --text: #dbe2f5;
+    --muted: #7987ad;
+    --live: #5eead4;
+    --deploy: #fbbf24;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    line-height: 1.65;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-attachment: fixed;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 64px 24px 100px; }
+
+  /* ---------- Header ---------- */
+  .hdr { margin-bottom: 56px; }
+  .hdr-label {
+    color: var(--muted);
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 2.1rem;
+    font-weight: 650;
+    color: #fff;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .hdr p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 52ch;
+  }
+  .status-row {
+    display: flex;
+    gap: 18px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--live);
+    box-shadow: 0 0 8px var(--live);
+  }
+
+  /* ---------- Panels ---------- */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 28px 30px;
+    margin-bottom: 20px;
+  }
+  .panel-title {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 18px;
+  }
+  .panel-title span { color: var(--live); }
+
+  /* ---------- Diagram ---------- */
+  .diagram { width: 100%; height: auto; display: block; margin-bottom: 4px; }
+  .diagram-caption {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 14px;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+
+  /* ---------- Stack list ---------- */
+  .stack-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.88rem;
+  }
+  .stack-row:last-child { border-bottom: none; }
+  .stack-name { color: #fff; }
+  .stack-role {
+    color: var(--muted);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 0.83rem;
+    text-align: right;
+  }
+
+  /* ---------- Counter ---------- */
+  .counter-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .counter-desc {
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    max-width: 40ch;
+  }
+  .counter-value {
+    font-size: 2.4rem;
+    color: var(--live);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .counter-value span {
+    font-size: 0.85rem;
+    color: var(--muted);
+    display: block;
+    font-weight: 400;
+    margin-top: 4px;
+  }
+
+  /* ---------- Roadmap ---------- */
+  .road-item {
+    display: flex;
+    gap: 14px;
+    padding: 9px 0;
+    font-size: 0.85rem;
+    align-items: baseline;
+  }
+  .road-mark { color: var(--live); width: 16px; }
+  .road-mark.pending { color: var(--line); }
+  .road-item.pending .road-text { color: var(--muted); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 48px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  footer a { color: var(--live); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.6rem; }
+    .counter-panel { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="hdr-label">// portfolio.infra</div>
+    <h1>Krish Srivastava</h1>
+    <p>This page is a running piece of AWS infrastructure, not a mockup of one. Everything below — the CDN, the database, the function answering the counter — is live right now.</p>
+    <div class="status-row">
+      <div class="status"><span class="dot"></span> Serving over CloudFront</div>
+      <div class="status"><span class="dot"></span> Deployed via AWS CDK</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">ARCHITECTURE <span>— live traffic path</span></div>
+    <svg class="diagram" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#3a4a7a"/>
+        </marker>
+      </defs>
+
+      <!-- Visitor -->
+      <rect x="10" y="30" width="90" height="40" rx="2" fill="none" stroke="#3a4a7a"/>
+      <text x="55" y="54" fill="#dbe2f5" font-size="12" text-anchor="middle" font-family="ui-monospace">Visitor</text>
+
+      <!-- CloudFront -->
+      <rect x="150" y="30" width="130" height="40" rx="2" fill="none" stroke="#5eead4"/>
+      <text x="215" y="54" fill="#5eead4" font-size="12" text-anchor="middle" font-family="ui-monospace">CloudFront</text>
+
+      <!-- S3 -->
+      <rect x="330" y="30" width="110" height="40" rx="2" fill="none" stroke="#5eead4"/>
+      <text x="385" y="54" fill="#5eead4" font-size="12" text-anchor="middle" font-family="ui-monospace">S3 bucket</text>
+
+      <!-- arrows top row -->
+      <line x1="100" y1="50" x2="146" y2="50" stroke="#3a4a7a" marker-end="url(#arrow)"/>
+      <line x1="280" y1="50" x2="326" y2="50" stroke="#3a4a7a" marker-end="url(#arrow)"/>
+
+      <!-- down arrow from visitor to API row -->
+      <line x1="55" y1="70" x2="55" y2="170" stroke="#3a4a7a" stroke-dasharray="3,3"/>
+      <line x1="55" y1="170" x2="146" y2="170" stroke="#3a4a7a" marker-end="url(#arrow)"/>
+      <text x="60" y="110" fill="#7987ad" font-size="10" font-family="ui-monospace">GET /count</text>
+
+      <!-- API Gateway -->
+      <rect x="150" y="150" width="130" height="40" rx="2" fill="none" stroke="#fbbf24"/>
+      <text x="215" y="174" fill="#fbbf24" font-size="12" text-anchor="middle" font-family="ui-monospace">API Gateway</text>
+
+      <!-- Lambda -->
+      <rect x="330" y="150" width="110" height="40" rx="2" fill="none" stroke="#fbbf24"/>
+      <text x="385" y="174" fill="#fbbf24" font-size="12" text-anchor="middle" font-family="ui-monospace">Lambda</text>
+
+      <!-- DynamoDB -->
+      <rect x="490" y="150" width="130" height="40" rx="2" fill="none" stroke="#fbbf24"/>
+      <text x="555" y="174" fill="#fbbf24" font-size="12" text-anchor="middle" font-family="ui-monospace">DynamoDB</text>
+
+      <line x1="280" y1="170" x2="326" y2="170" stroke="#3a4a7a" marker-end="url(#arrow)"/>
+      <line x1="440" y1="170" x2="486" y2="170" stroke="#3a4a7a" marker-end="url(#arrow)"/>
+
+      <!-- labels -->
+      <text x="55" y="260" fill="#7987ad" font-size="10" font-family="ui-monospace">static assets</text>
+      <text x="380" y="260" fill="#7987ad" font-size="10" font-family="ui-monospace">serverless request</text>
+    </svg>
+    <div class="diagram-caption">Static content is edge-cached through CloudFront. The visitor counter below hits a separate serverless path — API Gateway → Lambda → DynamoDB — on every page load.</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">STACK</div>
+    <div class="stack-row"><span class="stack-name">Amazon S3</span><span class="stack-role">Origin storage for site files</span></div>
+    <div class="stack-row"><span class="stack-name">CloudFront</span><span class="stack-role">CDN + HTTPS, OAC-secured origin</span></div>
+    <div class="stack-row"><span class="stack-name">API Gateway (HTTP API)</span><span class="stack-role">Public endpoint for the counter</span></div>
+    <div class="stack-row"><span class="stack-name">Lambda (Python 3.12)</span><span class="stack-role">Self-initializing counter logic</span></div>
+    <div class="stack-row"><span class="stack-name">DynamoDB</span><span class="stack-role">On-demand, single-item table</span></div>
+    <div class="stack-row"><span class="stack-name">AWS CDK (Python)</span><span class="stack-role">Whole stack, one command</span></div>
+  </div>
+
+  <div class="panel counter-panel">
+    <div class="counter-desc">Every load of this page calls the live API above and increments a real row in DynamoDB. No mock data.</div>
+    <div class="counter-value" id="visitor-count">—<span>visitors served</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">BUILD LOG</div>
+    <div class="road-item"><span class="road-mark">✓</span><span class="road-text">Static hosting on S3</span></div>
+    <div class="road-item"><span class="road-mark">✓</span><span class="road-text">CDN + HTTPS via CloudFront</span></div>
+    <div class="road-item"><span class="road-mark">✓</span><span class="road-text">Serverless counter — Lambda, API Gateway, DynamoDB</span></div>
+    <div class="road-item"><span class="road-mark">✓</span><span class="road-text">Rebuilt as Infrastructure as Code — AWS CDK</span></div>
+    <div class="road-item pending"><span class="road-mark pending">○</span><span class="road-text">CloudWatch monitoring and alarms</span></div>
+  </div>
+
+  <footer>
+    <span>Deployed with <code>cdk deploy</code> · Last updated <span id="date"></span></span>
+    <a href="mailto:you@example.com">krishsrivastava518@gmail.com</a>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById('date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+  fetch('https://h36p3wghql.execute-api.ap-south-1.amazonaws.com/count')
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('visitor-count').innerHTML = data.count + '<span>visitors served</span>';
+    })
+    .catch(() => {
+      document.getElementById('visitor-count').innerHTML = '—<span>counter unavailable</span>';
+    });
+</script>
+</body>
+</html>
