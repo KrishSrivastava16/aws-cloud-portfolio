@@ -11,6 +11,9 @@ from aws_cdk import (
     aws_lambda as _lambda,
     aws_apigatewayv2 as apigwv2,
     aws_apigatewayv2_integrations as apigwv2_integrations,
+    aws_cloudwatch as cloudwatch,
+    aws_sns as sns,
+    aws_cloudwatch_actions as cw_actions,
 )
 from constructs import Construct
 
@@ -45,7 +48,7 @@ class CdkPortfolioProjectStack(Stack):
             partition_key=dynamodb.Attribute(
                 name="id", type=dynamodb.AttributeType.STRING
             ),
-            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,  # same as on-demand mode you used manually
+            billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=RemovalPolicy.DESTROY,
         )
 
@@ -62,15 +65,31 @@ class CdkPortfolioProjectStack(Stack):
             timeout=Duration.seconds(10),
         )
 
-        # Grant Lambda read/write access to just this table (scoped down, unlike the FullAccess you used manually)
         visitor_table.grant_read_write_data(visitor_function)
+
+        # ---------- MONITORING: CloudWatch alarm on Lambda errors ----------
+
+        alert_topic = sns.Topic(
+            self, "VisitorCounterAlerts",
+            display_name="Visitor Counter Lambda Alerts",
+        )
+
+        error_alarm = cloudwatch.Alarm(
+            self, "VisitorCounterErrorAlarm",
+            metric=visitor_function.metric_errors(period=Duration.minutes(5)),
+            threshold=1,
+            evaluation_periods=1,
+            comparison_operator=cloudwatch.ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+            alarm_description="Fires when the visitor counter Lambda throws any error in a 5-minute window.",
+        )
+        error_alarm.add_alarm_action(cw_actions.SnsAction(alert_topic))
 
         # ---------- BACKEND: API Gateway (HTTP API) ----------
 
         http_api = apigwv2.HttpApi(
             self, "VisitorCounterApi",
             cors_preflight=apigwv2.CorsPreflightOptions(
-                allow_origins=["*"],
+                allow_origins=["*"],  # public, read-only counter endpoint — safe to allow any origin
                 allow_methods=[apigwv2.CorsHttpMethod.GET],
             ),
         )
@@ -97,3 +116,4 @@ class CdkPortfolioProjectStack(Stack):
 
         CfnOutput(self, "SiteURL", value=f"https://{distribution.distribution_domain_name}")
         CfnOutput(self, "ApiURL", value=f"{http_api.api_endpoint}/count")
+        CfnOutput(self, "AlertTopicArn", value=alert_topic.topic_arn)
